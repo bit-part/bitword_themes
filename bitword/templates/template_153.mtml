@@ -1,0 +1,127 @@
+<mt:Include module="mod_html_header" parent="1">
+<body>
+<mt:Include module="mod_navbar" parent="1">
+  <div class="container">
+
+    <div class="row row-offcanvas row-offcanvas-right">
+      <div id="mt-entries" class="col-xs-12 col-sm-12">
+        <mt:Ignore>
+        <p class="pull-right visible-xs">
+          <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+        </p>
+        </mt:Ignore>
+        <mt:IfBlog><p id="loadingImg"><img src="<mt:StaticWebPath>images/indicator.gif" alt="Loading..."></p></mt:IfBlog>
+        <mt:IfWebsite>
+        <mt:Ignore>ウェブサイトトップ jumbotron [start]</mt:Ignore>
+        <mt:If name="website_top">
+        <div class="jumbotron">
+          <h1><mt:WebsiteName></h1>
+          <mt:If tag="WebsiteDescription">
+          <p><mt:WebsiteDescription></p>
+          <p><a href="<mt:WebsiteURL>about.html" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+          </mt:If>
+        </div>
+        </mt:If>
+        <mt:Ignore>ウェブサイトトップ jumbotron [ end ]</mt:Ignore>
+
+        <mt:Entries include_blogs="children" lastn="0">
+        <mt:Ignore>
+        <mt:Var name="__counter__" op="%" value="3" setvar="each3">
+        <mt:If name="each3" eq="1">
+        <div class="row">
+        </mt:If>
+        </mt:Ignore>
+        <mt:If name="__odd__">
+        <mt:SetVar name="row_close" value="0">
+        <div class="row">
+        </mt:If>
+          <div class="col-xs-12 col-sm-6">
+            <div class="well mt-entry" data-entry-id="<mt:EntryID>" data-blog-id="<mt:EntryBlogID>">
+              <mt:Ignore>ツールボタン [start]</mt:Ignore>
+              <div class="btn-group btn-group-sm pull-right">
+                <button type="button" class="mt-ok btn btn-success">
+                  <span class="glyphicon glyphicon-ok"></span>
+                </button>
+                <button type="button" class="mt-edit btn btn-warning">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+              </div>
+              <mt:Ignore>ツールボタン [ end ]</mt:Ignore>
+              <h5 class="mt-japanese"><mt:EntryTitle remove="html"></h5>
+              <h5 class="mt-english"><mt:EntryKeywords remove="html"></h5>
+            </div>
+          </div>
+        <mt:If name="__even__">
+        <mt:SetVar name="row_close" value="1">
+        </div><!--/row-->
+        </mt:If>
+        <mt:EntriesFooter>
+        <mt:If name="row_close" ne="1">
+        </div><!--/row-->
+        </mt:If>
+        </mt:EntriesFooter>
+        </mt:Entries>
+        </mt:IfWebsite>
+
+      </div><!--/col-xs-12 col-sm-9-->
+<mt:Ignore>
+<mt:Include module="mod_sidebar" parent="1">
+</mt:Ignore>
+<mt:Include module="mod_footer" parent="1">
+
+  </div><!--/.container-->
+
+  <mt:Ignore>投稿フォーム [start]</mt:Ignore>
+  <div class="modal fade" id="postEntryForm" tabindex="-1" role="dialog" aria-labelledby="postEntryFormLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 id="postFormTitle" class="modal-title">Edit Entry</h4>
+        </div>
+        <div class="modal-body">
+          <input id="postEntryId" type="hidden">
+          <input id="postEntryBlogId" type="hidden">
+          <div class="form-group">
+            <label>Japanese Sentence</label>
+            <input id="postEntryTitle" type="text" class="form-control" placeholder="Japanese Sentence">
+          </div>
+          <div class="form-group">
+            <label>English Sentence</label>
+            <input id="postEntryKeywords" type="text" class="form-control" placeholder="English Sentence">
+          </div>
+
+          <mt:Ignore>Progress Bar [start]</mt:Ignore>
+          <div id="postEntryProgress" class="progress progress-striped" style="display:none;">
+            <div id="postEntryProgressBar" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+              <span class="sr-only">20% Complete</span>
+            </div>
+          </div>
+          <mt:Ignore>Progress Bar [ end ]</mt:Ignore>
+
+          <mt:Ignore>Alert [start]</mt:Ignore>
+          <div id="postEntrySuccess" class="alert alert-success" style="display:none;">Entry Saved</div>
+          <div id="postEntryError" class="alert alert-error" style="display:none;">Oops! Couldn't save the Entry.</div>
+          <mt:Ignore>Alert [ end ]</mt:Ignore>
+
+        </div>
+        <div class="modal-footer">
+          <button id="postEntryCancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button id="postEntrySave" type="button" class="btn btn-primary">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  <mt:Ignore>投稿フォーム [ end ]</mt:Ignore>
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <input id="mt-blog-id" type="hidden" value="<mt:BlogID>">
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="<mt:WebsiteURL>js/bootstrap.min.js"></script>
+  <script src="<mt:WebsiteURL>js/offcanvas.js"></script>
+  <script src="<mt:StaticWebPath>data-api/v1/js/mt-data-api.min.js"></script>
+  <script src="<mt:WebsiteURL>js/common.js"></script>
+</body>
+</html>

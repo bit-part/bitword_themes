@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="shortcut icon" href="../../assets/ico/favicon.png">
+
+  <title><mt:WebsiteName></title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="<mt:WebsiteURL>css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="<mt:WebsiteURL>css/offcanvas.css" rel="stylesheet">
+  <style type="text/css">
+  #mt-entries .mt-entry {
+    cursor: pointer;
+  }
+  #mt-entries .mt-entry .mt-english {
+    display: none;
+  }
+  #mt-entries .mt-entry.mt-english .mt-english {
+    display: block;
+  }
+  #mt-entries .mt-entry.mt-english .mt-japanese {
+    display: none;
+  }
+<mt:Ignore>
+  #mt-entries .mt-entry button.ctrlJa {
+    display: none;
+  }
+  #mt-entries .mt-entry.mt-english button.ctrlJa {
+    display: inline-block;
+  }
+  #mt-entries .mt-entry.mt-english button.ctrlEn {
+    display: none;
+  }
+</mt:Ignore>
+  #mt-entries #loadingImg {
+    text-align: center;
+  }
+  </style>
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="<mt:WebsiteURL>js/html5shiv.js"></script>
+    <script src="<mt:WebsiteURL>js/respond.min.js"></script>
+  <![endif]-->
+</head>

@@ -1,0 +1,236 @@
+(function($){
+  var mtBlogId = $("#mt-blog-id").val();
+  var completed = false;
+
+  var api = new MT.DataAPI({
+    baseUrl:  "<mt:CGIPath>mt-data-api.cgi",
+    clientId: "tinybeans"
+  });
+
+  api.getToken(function(response) {
+    if (response.error) {
+      if (response.error.code === 401) {
+        location.href = api.getAuthorizationUrl(location.href);
+      }
+      // else {
+      //   // Handle error
+      // }
+    }
+    else {
+      // You have been authenticated.
+      var $loadingImg = $("#loadingImg");
+      var sortByRand = ["authored_on", "title", "created_on", "modified_on"];
+      var sortOrderRand = ["descend", "ascend"];
+      var params = {
+<mt:Ignore>
+        sortBy: sortByRand[Math.floor(Math.random() * 4) % 4],
+        sortOrder: sortOrderRand[Math.floor(Math.random() * 10) % 2],
+</mt:Ignore>
+        status: "Publish",
+        offset: 0,
+        limit: 20,
+        fields: "id,title,keywords,blog"
+      };
+      getApiEntries (params);
+
+      var bottomLoad = true;
+      var loadFinished = false;
+      $(window).on("scroll", function() {
+        var docHeight = $(document).height();
+        var scrollPos = $(window).height() + $(window).scrollTop();
+        var bottomHeight = docHeight - $("#footer").offset().top;
+        if (bottomLoad && !loadFinished && (docHeight - scrollPos) < 150) {
+          bottomLoad = false;
+          var offset = params.offset;
+          params.offset = offset + params.limit;
+          params.status = (completed) ? "Draft" : "Publish";
+          getApiEntries (params);
+        }
+      });
+
+      $("#mt-entries")
+      .on("click", "div.mt-entry", function(){
+        if ($(this).hasClass("mt-english")) {
+          $(this).removeClass("mt-english");
+        }
+        else {
+          $(this).addClass("mt-english");
+        }
+      })
+      .on("click", "button.mt-ok", function(e){
+        e.stopPropagation();
+        $(this).parent().parent().fadeOut("fast");
+        var $entry = $(this).parent().parent();
+
+        var entryData = {
+          title: $(this).parent().nextAll(".mt-japanese").text(),
+          keywords: $(this).parent().nextAll(".mt-english").text(),
+          status: "Draft"
+        };
+
+        api.updateEntry($entry.data("blog-id"), $entry.data("entry-id"), entryData, function(response) {
+          // hoge
+        });
+      })
+      .on("click", "button.mt-backward", function(e){
+        e.stopPropagation();
+        $(this).parent().parent().fadeOut("fast");
+        var $entry = $(this).parent().parent();
+
+        var entryData = {
+          title: $(this).parent().nextAll(".mt-japanese").text(),
+          keywords: $(this).parent().nextAll(".mt-english").text(),
+          status: "Publish"
+        };
+
+        api.updateEntry($entry.data("blog-id"), $entry.data("entry-id"), entryData, function(response) {
+          // hoge
+        });
+      })
+      .on("click", "button.mt-edit", function(e){
+        e.stopPropagation();
+        var $entry = $(this).parent().parent();
+        var entryId = $entry.data("entry-id");
+        var blogId = $entry.data("blog-id");
+        var entryTitle = $(this).parent().nextAll(".mt-japanese").text();
+        var entryKeywords = $(this).parent().nextAll(".mt-english").text();
+        $("#postFormTitle").text("Edit Entry");
+        $("#postEntryId").val(entryId);
+        $("#postEntryBlogId").val(blogId);
+        $("#postEntryTitle").val(entryTitle);
+        $("#postEntryKeywords").val(entryKeywords);
+        $('#postEntryForm').modal('show');
+      });
+
+      $("#createNewEntry").on("click", function(e){
+        var blogId = $(this).data("blog-id");
+        $("#postFormTitle").text("Create Entry");
+        $("#postEntryId").val("");
+        $("#postEntryBlogId").val(blogId);
+        $("#postEntryTitle").val("");
+        $("#postEntryKeywords").val("");
+        $('#postEntryForm').modal('show');
+      });
+
+      $("#postEntrySave").on("click", function(){
+        $("#postEntryProgress").fadeIn("fast");
+        var siteId = $("#postEntryBlogId").val();
+        var entryId = $("#postEntryId").val();
+        var entryData = {
+          title: $("#postEntryTitle").val(),
+          keywords: $("#postEntryKeywords").val(),
+          tags: ["test"]
+          // status: "2"
+        };
+        if (entryId) {
+          updateApiEntry (siteId, entryId, entryData);
+        }
+        else {
+          createApiEntry (siteId, entryData);
+        }
+      });
+
+      $("#completedSentence").on("click", function(){
+        completed = true;
+        $("#mt-entries div.row").remove();
+        var params = {
+          status: "Draft",
+          offset: 0,
+          limit: 20,
+          fields: "id,title,keywords,blog"
+        };
+        getApiEntries (params);
+      });
+
+      $("#refreshBtn").on("click", function(){
+        location.reload();
+      });
+      // You have been authenticated.
+    }
+
+    // Functions
+    function getApiEntries (params) {
+      $loadingImg.show().appendTo("#mt-entries");
+      api.listEntries(mtBlogId, params, function(response) {
+        if (response.error) {
+          // Handle error
+          return;
+        }
+        if (response.items.length < params.limit) {
+          loadFinished = true;
+        }
+        var entriesHtml = [];
+        var divCond = "open";
+        for (var i = 0, l = response.items.length; i < l; i++) {
+          if (i % 2 == 0) {
+            entriesHtml.push('<div class="row">');
+            divCond = "open";
+          }
+          entriesHtml.push(setEntryPanel(response.items[i].blog.id, response.items[i].id, response.items[i].title, response.items[i].keywords, i));
+          if (i % 2 == 1) {
+            entriesHtml.push('</div>');
+            divCond = "close";
+          }
+          if ((i + 1) == l && divCond == "open") {
+            entriesHtml.push('</div>');
+          }
+        }
+        $("#mt-entries").append(entriesHtml.join("")).fadeIn();
+        bottomLoad = true;              
+        $loadingImg.hide();
+      });
+    }
+
+    function createApiEntry (siteId, entryData) {
+      var $postEntryProgressBar = $("#postEntryProgressBar").width("40%");
+      $postEntryProgressBar.width("60%");
+      api.createEntry(siteId, entryData, function(response) {
+        $postEntryProgressBar.width("80%");
+        var alertId = (response.error) ? "#postEntryError" : "#postEntrySuccess";
+        $postEntryProgressBar.width("100%");
+        $(alertId).slideDown(function(){
+          setTimeout(function(){
+            $('#postEntryForm').modal('hide');
+          }, 500);
+        });
+      });
+    }
+
+    function updateApiEntry (siteId, entryId, entryData) {
+      var $postEntryProgressBar = $("#postEntryProgressBar").width("40%");
+      $postEntryProgressBar.width("60%");
+      api.updateEntry(siteId, entryId, entryData, function(response) {
+        $postEntryProgressBar.width("80%");
+        var alertId = (response.error) ? "#postEntryError" : "#postEntrySuccess";
+        $postEntryProgressBar.width("100%");
+        $(alertId).slideDown(function(){
+          setTimeout(function(){
+            $('#postEntryForm').modal('hide');
+          }, 500);
+        });
+      });
+    }
+
+    function setEntryPanel (siteId, entryId, entryTitle, entryKeywords) {
+      var style = completed ? ' style="border:1px solid #2c3e50;background-color:#ecf0f1;"' : '';
+      var okBtn = completed ? 'backward' : 'ok';
+      return [
+        '<div class="col-xs-12 col-sm-6">',
+          '<div class="well mt-entry" data-entry-id="' + entryId + '" data-blog-id="' + siteId + '"' + style + '>',
+            '<div class="btn-group btn-group-sm pull-right">',
+              '<button type="button" class="mt-' + okBtn + ' btn btn-success">',
+                '<span class="glyphicon glyphicon-' + okBtn + '"></span>',
+              '</button>',
+              '<button type="button" class="mt-edit btn btn-warning">',
+                '<span class="glyphicon glyphicon-pencil"></span>',
+              '</button>',
+            '</div>',
+            '<h5 class="mt-japanese">' + entryTitle + '</h5>',
+            '<h5 class="mt-english">' + entryKeywords + '</h5>',
+          '</div>',
+        '</div>'
+      ].join("");
+    }
+
+  });
+})(jQuery);

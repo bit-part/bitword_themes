@@ -1,0 +1,90 @@
+<mt:Include module="mod_html_header" parent="1">
+<body>
+<mt:Include module="mod_navbar" parent="1">
+
+  <div class="container">
+
+    <form class="form-signin">
+      <div id="loginError" class="alert alert-danger" style="display:none;">The sign-in attempt was not successful; Please try again.</div>
+      <h2 class="form-signin-heading">Please sign in</h2>
+      <div class="form-group">
+        <label>User ID</label>
+        <input id="userId" type="text" class="form-control" placeholder="User ID" autofocus>
+      </div>
+      <div class="form-group">
+        <label>password</label>
+        <input id="password" type="password" class="form-control" placeholder="Password">
+      </div>      
+      <label class="checkbox">
+        <input id="remember" type="checkbox" value="remember-me" checked> Remember me
+      </label>
+      <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
+<mt:Ignore>
+<mt:Include module="mod_sidebar" parent="1">
+</mt:Ignore>
+<mt:Include module="mod_footer" parent="1">
+
+  </div><!--/.container-->
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <input id="mt-blog-id" type="hidden" value="<mt:BlogID>">
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="<mt:WebsiteURL>js/bootstrap.min.js"></script>
+  <script src="<mt:WebsiteURL>js/offcanvas.js"></script>
+  <script src="<mt:StaticWebPath>data-api/v1/js/mt-data-api.min.js"></script>
+  <script type="text/javascript">
+  (function($){
+    var api = new MT.DataAPI({
+      baseUrl:  "<mt:CGIPath>mt-data-api.cgi",
+      clientId: "tinybeans"
+    });
+    api.getToken(function(response) {
+      if (response.error) {
+        return;
+      }
+      location.href = "<mt:BlogURL>";
+    });
+
+    // var userId = (localStorage.getItem("userId")) ? localStorage.getItem("userId") : sessionStorage.getItem("userId");
+    // var password = (localStorage.getItem("password")) ? localStorage.getItem("password") : sessionStorage.getItem("password");
+    // if (userId && password) {
+
+    //   api.authenticate({
+    //     username: userId,
+    //     password: password,
+    //     remember: true
+    //   }, function(response) {
+    //     if (response.error) {
+    //       // Handle error
+    //       return;
+    //     }
+    //     api.storeTokenData(response);
+    //     location.href = "<mt:BlogURL>";
+    //   });
+    // }
+    $("form").on("submit", function(e){
+      e.preventDefault();
+      var userId = $("#userId").val();
+      var password = $("#password").val();
+      api.authenticate({
+        username: userId,
+        password: password,
+        remember: true
+      }, function(response) {
+        if (response.error) {
+          $("#loginError").slideDown("fast");
+          return;
+        }
+        api.storeTokenData(response);
+        location.href = "<mt:BlogURL>";
+      });
+      return false;
+    });
+  })(jQuery);
+  </script>
+</body>
+</html>

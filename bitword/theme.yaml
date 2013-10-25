@@ -1,0 +1,111 @@
+--- 
+author_link: http://bit-part.net/
+author_name: bit part LLC
+class: website
+description: ''
+elements: 
+  template_set: 
+    component: ~
+    data: 
+      base_path: templates
+      label: exported_template set
+      templates: 
+        index: 
+          template_157: 
+            label: index.html
+            outfile: index.html
+            rebuild_me: 1
+          template_158: 
+            build_type: 2
+            label: css/bootstrap.min.css
+            outfile: css/bootstrap.min.css
+            rebuild_me: 0
+          template_159: 
+            build_type: 2
+            label: css/offcanvas.css
+            outfile: css/offcanvas.css
+            rebuild_me: 0
+          template_160: 
+            build_type: 2
+            label: js/bootstrap.min.js
+            outfile: js/bootstrap.min.js
+            rebuild_me: 0
+          template_161: 
+            build_type: 2
+            label: js/common.js
+            outfile: js/common.js
+            rebuild_me: 0
+          template_162: 
+            build_type: 2
+            label: js/html5shiv.js
+            outfile: js/html5shiv.js
+            rebuild_me: 0
+          template_163: 
+            build_type: 2
+            label: js/offcanvas.js
+            outfile: js/offcanvas.js
+            rebuild_me: 0
+          template_164: 
+            build_type: 2
+            label: js/respond.min.js
+            outfile: js/respond.min.js
+            rebuild_me: 0
+        module: 
+          template_151: 
+            label: mod_footer
+          template_152: 
+            label: mod_html_header
+          template_153: 
+            label: mod_index.html
+          template_154: 
+            label: mod_login.html
+          template_155: 
+            label: mod_navbar
+          template_156: 
+            label: mod_sidebar
+        system: 
+          comment_preview: 
+            label: コメントプレビュー
+          comment_response: 
+            label: コメント完了
+          dynamic_error: 
+            label: ダイナミックパブリッシングエラー
+          popup_image: 
+            label: ポップアップ画像
+          search_results: 
+            label: 検索結果
+        widget: 
+          category_archive_list: 
+            label: カテゴリアーカイブ
+          monthly_archive_dropdown: 
+            label: 月別アーカイブ(ドロップダウン)
+          monthly_archive_list: 
+            label: 月別アーカイブ
+          pages_list: 
+            label: ページ一覧
+          recent_comments: 
+            label: 最近のコメント
+          recent_entries: 
+            label: 最近の記事
+          search: 
+            label: 検索
+          syndication: 
+            label: 購読
+          tag_cloud: 
+            label: タグクラウド
+        widgetset: 
+          related_contents: 
+            label: 関連コンテンツ
+            order: 1000
+            widgets: 
+              - 検索
+              - カテゴリアーカイブ
+              - 月別アーカイブ(ドロップダウン)
+              - 最近のコメント
+              - タグクラウド
+              - 購読
+    importer: template_set
+id: bitword
+label: bitword
+name: bitword
+version: '1.0'

@@ -1,0 +1,34 @@
+<mt:Include module="mod_html_header">
+<body>
+  <div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
+      <div id="mt-entries" class="col-xs-12 col-sm-12">
+        <div class="jumbotron">
+          <h1><mt:WebsiteName></h1>
+          <mt:If tag="WebsiteDescription">
+          <p><mt:WebsiteDescription></p>
+          </mt:If>
+        </div>
+        <mt:Blogs include_blogs="children">
+        <mt:If name="__first__">
+        <table class="table table-striped">
+          <tbody>
+        </mt:If>
+            <td><a href="<mt:BlogURL>"><mt:BlogName escape="html"></a></td>
+        <mt:If name="__last__">
+          </tbody>
+        </table>
+        </mt:If>
+        </mt:Blogs>
+      </div><!--/col-xs-12 col-sm-9-->
+<mt:Include module="mod_footer">
+  </div><!--/.container-->
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <input id="mt-blog-id" type="hidden" value="<mt:BlogID>">
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="<mt:WebsiteURL>js/bootstrap.min.js"></script>
+</body>
+</html>

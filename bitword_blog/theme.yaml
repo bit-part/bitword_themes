@@ -1,0 +1,63 @@
+--- 
+author_link: http://bit-part.net/
+author_name: bit part LLC
+class: blog
+description: ''
+elements: 
+  template_set: 
+    component: ~
+    data: 
+      base_path: templates
+      label: exported_template set
+      templates: 
+        index: 
+          template_201: 
+            label: index.html
+            outfile: index.html
+            rebuild_me: 1
+        system: 
+          comment_preview: 
+            label: コメントプレビュー
+          comment_response: 
+            label: コメント完了
+          dynamic_error: 
+            label: ダイナミックパブリッシングエラー
+          popup_image: 
+            label: ポップアップ画像
+          search_results: 
+            label: 検索結果
+        widget: 
+          category_archive_list: 
+            label: カテゴリアーカイブ
+          monthly_archive_dropdown: 
+            label: 月別アーカイブ(ドロップダウン)
+          monthly_archive_list: 
+            label: 月別アーカイブ
+          pages_list: 
+            label: ページ一覧
+          recent_comments: 
+            label: 最近のコメント
+          recent_entries: 
+            label: 最近の記事
+          search: 
+            label: 検索
+          syndication: 
+            label: 購読
+          tag_cloud: 
+            label: タグクラウド
+        widgetset: 
+          related_contents: 
+            label: 関連コンテンツ
+            order: 1000
+            widgets: 
+              - 検索
+              - カテゴリアーカイブ
+              - 月別アーカイブ(ドロップダウン)
+              - 最近のコメント
+              - タグクラウド
+              - 購読
+    importer: template_set
+id: bitword_blog
+label: bitword blog
+name: bitword blog
+version: '1.0'
