@@ -14,7 +14,10 @@
         <table class="table table-striped">
           <tbody>
         </mt:If>
-            <td><a href="<mt:BlogURL>"><mt:BlogName escape="html"></a></td>
+            <tr>
+              <td><a href="<mt:BlogURL>"><mt:BlogName escape="html"></a></td>
+              <td><mt:If tag="BlogDescription"><mt:BlogDescription><mt:Else>&nbsp;</mt:If></td>
+            </tr>
         <mt:If name="__last__">
           </tbody>
         </table>
