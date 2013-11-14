@@ -3,8 +3,8 @@
   var completed = false;
 
   var api = new MT.DataAPI({
-    baseUrl:  "<mt:CGIPath>mt-data-api.cgi",
-    clientId: "tinybeans"
+    baseUrl:  "<mt:CGIPath><mt:Var name="config.DataAPIScript">",
+    clientId: "bitword_template"
   });
 
   api.getToken(function(response) {
@@ -12,9 +12,10 @@
       if (response.error.code === 401) {
         location.href = api.getAuthorizationUrl(location.href);
       }
-      // else {
-      //   // Handle error
-      // }
+      else {
+        var errorMsg = response.error.message ? response.error.message : "Unknown error";
+        alert("Error: " + errorMsg);
+      }
     }
     else {
       // You have been authenticated.
@@ -26,6 +27,8 @@
         sortBy: sortByRand[Math.floor(Math.random() * 4) % 4],
         sortOrder: sortOrderRand[Math.floor(Math.random() * 10) % 2],
 </mt:Ignore>
+        // sortBy: sort_by,
+        // sortOrder: sort_order,
         status: "Publish",
         offset: 0,
         limit: 20,
@@ -89,6 +92,7 @@
       })
       .on("click", "button.mt-edit", function(e){
         e.stopPropagation();
+        postFormInit();
         var $entry = $(this).parent().parent();
         var entryId = $entry.data("entry-id");
         var blogId = $entry.data("blog-id");
@@ -103,7 +107,9 @@
       });
 
       $("#createNewEntry").on("click", function(e){
+        postFormInit();
         var blogId = $(this).data("blog-id");
+        $("#postEntryProgressBar").width("20%");
         $("#postFormTitle").text("Create Entry");
         $("#postEntryId").val("");
         $("#postEntryBlogId").val(blogId);
@@ -149,6 +155,9 @@
     }
 
     // Functions
+    function postFormInit () {
+      $("#postEntryProgress,#postEntrySuccess,#postEntryError").hide();
+    }
     function getApiEntries (params) {
       $loadingImg.show().appendTo("#mt-entries");
       api.listEntries(mtBlogId, params, function(response) {
@@ -176,7 +185,7 @@
           }
         }
         $("#mt-entries").append(entriesHtml.join("")).fadeIn();
-        bottomLoad = true;              
+        bottomLoad = true;
         $loadingImg.hide();
       });
     }
@@ -186,13 +195,18 @@
       $postEntryProgressBar.width("60%");
       api.createEntry(siteId, entryData, function(response) {
         $postEntryProgressBar.width("80%");
-        var alertId = (response.error) ? "#postEntryError" : "#postEntrySuccess";
-        $postEntryProgressBar.width("100%");
-        $(alertId).slideDown(function(){
-          setTimeout(function(){
-            $('#postEntryForm').modal('hide');
-          }, 500);
-        });
+        if (response.error) {
+          var errorMsg = response.error.message ? 'response.error.message' : "Couldn't save the Entry.";
+          $("#postEntryError").text("Oops! " + errorMsg).slideDown();
+        }
+        else {
+          $postEntryProgressBar.width("100%");
+          $("#postEntrySuccess").slideDown(function(){
+            setTimeout(function(){
+              $('#postEntryForm').modal('hide');
+            }, 500);
+          });
+        }
       });
     }
 
