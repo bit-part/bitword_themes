@@ -72,6 +72,8 @@
   </div><!--/.container-->
 
   <mt:Ignore>投稿フォーム [start]</mt:Ignore>
+  <mt:Unless name="first_sentence">Japanese Sentence</mt:Unless>
+  <mt:Unless name="second_sentence">English Sentence</mt:Unless>
   <div class="modal fade" id="postEntryForm" tabindex="-1" role="dialog" aria-labelledby="postEntryFormLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -83,12 +85,12 @@
           <input id="postEntryId" type="hidden">
           <input id="postEntryBlogId" type="hidden">
           <div class="form-group">
-            <label>Japanese Sentence</label>
-            <input id="postEntryTitle" type="text" class="form-control" placeholder="Japanese Sentence">
+            <label><mt:Var name="first_sentence"></label>
+            <input id="postEntryTitle" type="text" class="form-control" placeholder="<mt:Var name="first_sentence">">
           </div>
           <div class="form-group">
-            <label>English Sentence</label>
-            <input id="postEntryKeywords" type="text" class="form-control" placeholder="English Sentence">
+            <label><mt:Var name="second_sentence"></label>
+            <input id="postEntryKeywords" type="text" class="form-control" placeholder="<mt:Var name="second_sentence">">
           </div>
 
           <mt:Ignore>Progress Bar [start]</mt:Ignore>
